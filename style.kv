@@ -1,0 +1,1494 @@
+#:kivy 1.10.1
+#:import date datetime.date
+#:import Decimal decimal.Decimal
+#:import format_brl util.brl.format_brl
+#:import parse_brl util.brl.parse_brl
+#:import is_left_click util.is_left_click
+
+<Menu>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        BorderedLabel:
+            text: "J&N Artefatos de Cimento"
+            font_size: 60
+
+        BoxLayout:
+            orientation: "vertical"
+
+            # Used to keep all the buttons with the same size.
+            padding: 0,50,0,0
+
+            BoxLayout:
+                padding: 50,0,50,50
+                BorderedButton:
+                    text: "Realizar nova encomenda"
+                    size_hint_x: .3
+                    pos_hint: {"center_x": .5}
+                    font_size: 30
+                    on_touch_down:
+                        if is_left_click(self, args[1]): root.manager.current = 'new_order'
+
+            BoxLayout:
+                padding: 50,0,50,50
+                BorderedButton:
+                    text: "Consultar encomendas"
+                    size_hint_x: .3
+                    pos_hint: {"center_x": .5}
+                    font_size: 30
+                    on_touch_down:
+                        if is_left_click(self, args[1]): root.manager.current = 'consult'
+
+            BoxLayout:
+                padding: 50,0,50,50
+                BorderedButton:
+                    text: "Pagamentos"
+                    size_hint_x: .3
+                    pos_hint: {"center_x": .5}
+                    font_size: 30
+                    on_touch_down:
+                        if is_left_click(self, args[1]): root.manager.current = 'payments'
+
+            BoxLayout:
+                padding: 50,0,50,50
+                BorderedButton:
+                    text: "Atualizar de Encomendas"
+                    size_hint_x: .3
+                    pos_hint: {"center_x": .5}
+                    font_size: 30
+                    on_touch_down:
+                        if is_left_click(self, args[1]): root.manager.current = 'orders'
+
+            BoxLayout:
+                padding: 50,0,50,50
+
+                BorderedButton:
+                    text: "Preços e Itens"
+                    size_hint_x: .3
+                    pos_hint: {"center_x": .5}
+                    font_size: 30
+                    on_touch_down:
+                        if is_left_click(self, args[1]): root.manager.current = 'prices'
+
+
+<NewOrderItens>:
+    BoxLayout:
+        orientation:'vertical'
+
+        BorderedLabel:
+            text: 'Itens - Nova Encomenda'
+            font_size: 30
+            size_hint_y: None
+            height: 80
+
+        ItensHeader
+
+        ScrollView:
+            Itens:
+                id: itens
+                size_hint_y: None
+                height: self.minimum_height
+
+        BoxLayout:
+
+            size_hint_y: None
+            height: 40
+
+            BorderedLabel:
+                text: 'Total da Encomenda'
+                height: self.parent.height
+
+            BorderedLabel:
+                id: total
+                text: format_brl(0)
+                size_hint_x: None
+                width: 160
+                height: self.parent.height
+
+        BorderedButton:
+            text: "Adicionar Item"
+            size_hint_y: None
+            background_color: 0,1,0,1
+            font_size: 20
+            on_touch_down: if is_left_click(self, args[1]): root.add_iten_popup.open()
+
+        BoxLayout:
+            size_hint_y: None
+            BorderedButton:
+                size_hint_y: None
+                # height: 80
+                text: 'Voltar'
+                font_size: 20
+                background_color: 1, 0, 0, 1
+                on_touch_down: if is_left_click(self, args[1]): root.cancel()
+
+            BorderedButton:
+                size_hint_y: None
+                # height: 80
+                text: 'Continuar'
+                font_size: 20
+                background_color: 0, 0, 1, 1
+                on_touch_down: if is_left_click(self, args[1]): root.go_to_client()
+
+
+<NewClient>:
+    title: 'Novo Cliente'
+    title_size: 25
+    title_align: 'center'
+
+    size_hint: None, None
+
+    size: 800, 210
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        GridLayout:
+            cols: 2
+
+            height: 80
+
+            BorderedLabel:
+                text: 'Nome:'
+                color: 1,1,1,1
+                size_hint_y: None
+                height: 40
+
+            BorderedTextInput:
+                id: name
+                height: 40
+                size_hint_y: None
+                multiline: False
+
+            BorderedLabel:
+                text: 'Telefone:'
+                color: 1,1,1,1
+                size_hint_y: None
+                height: 40
+
+            BorderedTextInput:
+                id: phone
+                height: 40
+                size_hint_y: None
+                multiline: False
+
+        BoxLayout:
+            height: 50
+            size_hint_y: None
+            BorderedButton:
+                text: "Cancelar"
+                background_color: 1,0,0,1
+                size_hint_y: None
+                height: 50
+                on_touch_down: if is_left_click(self, args[1]): root.dismiss()
+
+            BorderedButton:
+                text: 'Criar'
+                background_color: 0,1,0,1
+                size_hint_y: None
+                height: 50
+                on_touch_down: if is_left_click(self, args[1]): root.create()
+
+
+<EditClient>:
+    title: 'Editar Cliente'
+    title_size: 25
+    title_align: 'center'
+
+    size_hint: None, None
+
+    size: 800, 210
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        GridLayout:
+            cols: 2
+
+            height: 80
+
+            BorderedLabel:
+                text: 'Nome:'
+                color: 1,1,1,1
+                size_hint_y: None
+                height: 40
+
+            BorderedTextInput:
+                id: name
+                height: 40
+                size_hint_y: None
+                multiline: False
+
+            BorderedLabel:
+                text: 'Telefone:'
+                color: 1,1,1,1
+                size_hint_y: None
+                height: 40
+
+            BorderedTextInput:
+                id: phone
+                height: 40
+                size_hint_y: None
+                multiline: False
+
+        BoxLayout:
+            height: 50
+            size_hint_y: None
+            BorderedButton:
+                text: "Cancelar"
+                background_color: 1,0,0,1
+                size_hint_y: None
+                height: 50
+                on_touch_down: if is_left_click(self, args[1]): root.dismiss()
+
+            BorderedButton:
+                text: 'Salvar'
+                background_color: 0,1,0,1
+                size_hint_y: None
+                height: 50
+                on_touch_down: if is_left_click(self, args[1]): root.save()
+
+
+<NewOrderClient>:
+    BoxLayout:
+        orientation:'vertical'
+
+        BorderedLabel:
+            text: 'Cliente - Nova Encomenda'
+            font_size: 30
+            size_hint_y: None
+            height: 80
+
+        BorderedTextInput:
+            id: search
+            hint_text: "Pesquisar cliente"
+            size_hint_y:  None
+            pos_hint: {"center_x": .5}
+            height: 40
+            on_text: root.filter(self.text)
+
+        RecycleView:
+            id: clients
+            viewclass: 'ExistentClient'
+            RecycleBoxLayout:
+                default_size: None, 60
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+
+        BoxLayout:
+            size_hint_y: None
+            BorderedButton:
+                size_hint_y: None
+                # height: 80
+                text: 'Voltar'
+                font_size: 20
+                background_color: 1, 0, 0, 1
+                on_touch_down: if is_left_click(self, args[1]): root.manager.current = 'itens'
+
+            BorderedButton:
+                text: "Novo Cliente"
+                size_hint_y: None
+                background_color: 0,1,0,1
+                font_size: 20
+                on_touch_down: if is_left_click(self, args[1]): root.new_client_popup().open()
+
+
+<NewOrderLast>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        BorderedLabel:
+            text: 'Últimas informaçoes - Nova encomenda'
+            font_size: 30
+            size_hint_y: None
+            height: 80
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: 220
+            padding: 50, 50, 50, 50
+
+            BorderedLabel
+                text: 'Local da entrega'
+                height: 60
+            BorderedTextInput:
+                id: local
+                height: 60
+
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: 50, 0, 50, 50
+
+            BorderedLabel:
+                text: 'Informações extras sobre a encomenda:'
+                height: 60
+
+            BorderedTextInput:
+                id: info
+
+        BoxLayout:
+            size_hint_y: None
+            height: 110
+            padding: 50, 50, 50, 50
+
+            BorderedLabel:
+                text: "A encomenda já foi entregue?"
+                height: 60
+
+            BorderedToggleButton:
+                id: delivered
+                text: "Sim"
+                group: 'delivered'
+                height: 60
+                width: 150
+                size_hint_x: None
+                allow_no_selection: False
+            BorderedToggleButton:
+                id: not_delivered
+                text: "Não"
+                group: 'delivered'
+                height: 60
+                width: 150
+                size_hint_x: None
+                state: 'down'
+                allow_no_selection: False
+
+
+        BoxLayout:
+            size_hint_y: None
+            BorderedButton:
+                text: 'Voltar'
+                background_color: 1, 0, 0, 1
+                on_touch_down: if is_left_click(self, args[1]): root.go_back()
+
+            BorderedButton:
+                text: 'Finalizar Encomenda'
+                background_color: 0, 0, 1, 1
+                on_touch_down: if is_left_click(self, args[1]): root.finish()
+
+
+<ExistentClient>:
+    size_hint_y: 1
+    text: self.name
+    font_size: 30
+
+
+<AddedIten>:
+    size_hint_y: None
+    height: 40
+
+    BorderedTextInput:
+        id: quantity
+        text: str(root.quantity)
+        multiline: False
+        font_size: 20
+        size_hint_x: None
+        width: 120
+        on_text: root.quantity_change()
+    BorderedLabel:
+        text: str(root.name)
+        font_size: 20
+        height: 40
+        size_hint_x: 1
+    BorderedTextInput:
+        id: unity_price
+        text: format_brl(root.unity_price)
+        width: 120
+        font_size: 20
+        multiline: False
+        size_hint_x: None
+        on_text: root.unity_price_change()
+    BorderedTextInput:
+        id: total
+        text: format_brl(root.total_price)
+        multiline: False
+        font_size: 20
+        size_hint_x: None
+        width: 120
+        on_text: root.total_change()
+    BorderedButton:
+        text: 'X'
+        background_color: 1, .1, .1, 1
+        size_hint_x: None
+        width: 40
+        on_touch_down: if is_left_click(self, args[1]): root.parent.remove_iten(root)
+
+
+<ItensHeader@BoxLayout>:
+    size_hint_y: None
+    height: 40
+
+    BorderedLabel:
+        text: 'Quantidade'
+        size_hint: None, None
+        font_size: 20
+        width: 120
+        height: root.height
+    BorderedLabel:
+        text: 'Item'
+        font_size: 20
+        size_hint: 1, None
+        height: root.height
+
+    BorderedLabel:
+        text: 'Unidade'
+        size_hint: None, None
+        font_size: 20
+        width: 120
+        height: root.height
+
+    BorderedLabel:
+        text: 'Total'
+        size_hint: None, None
+        font_size: 20
+        width: 120
+        height: root.height
+
+    BorderedLabel:
+        text: ''
+        size_hint: None, None
+        width: 40
+        height: root.height
+        font_size: 20
+
+
+<NewIten>:
+    title: 'Novo Iten'
+    title_size: 25
+    title_align: 'center'
+
+
+    size_hint: None, None
+
+    size: 800, 210
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        GridLayout:
+            cols: 2
+
+            height: 80
+
+            BorderedLabel:
+                text: 'Nome:'
+                color: 1,1,1,1
+                size_hint_y: None
+                height: 40
+
+            BorderedTextInput:
+                id: name
+                height: 40
+                size_hint_y: None
+                multiline: False
+                on_text: self.text = self.text.upper()
+
+            BorderedLabel:
+                text: 'Preço:'
+                color: 1,1,1,1
+                size_hint_y: None
+                height: 40
+
+            BorderedTextInput:
+                id: price
+                text: format_brl(0)
+                height: 40
+                size_hint_y: None
+                multiline: False
+                on_text: self.text = format_brl(parse_brl(self.text))
+
+        BoxLayout:
+            height: 50
+            size_hint_y: None
+            BorderedButton:
+                text: "Cancelar"
+                background_color: 1,0,0,1
+                size_hint_y: None
+                height: 50
+                on_touch_down: if is_left_click(self, args[1]): root.dismiss()
+
+            BorderedButton:
+                text: 'Adicionar'
+                background_color: 0,1,0,1
+                size_hint_y: None
+                height: 50
+                on_touch_down: if is_left_click(self, args[1]): root.add()
+
+
+<ConsultClientToSelect@BorderedButton>:
+    name: ''
+    client_id: 0
+
+    text: self.name
+    on_touch_down:
+        if is_left_click(self, args[1]): app.consult.sm.current_screen.choose(self.client_id)
+
+
+<ConsultSelectClient>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        BorderedLabel:
+            text: 'Selecionar Cliente - Consulta de Encomendas'
+            font_size: 30
+            size_hint_y: None
+            height: 80
+
+        BorderedTextInput:
+            id: search
+            hint_text: "Pesquisar cliente"
+            size_hint_y:  None
+            pos_hint: {"center_x": .5}
+            height: 40
+            on_text: root.filter(self.text)
+
+        RecycleView:
+            id:clients
+            viewclass: 'ConsultClientToSelect'
+            RecycleBoxLayout:
+                default_size: None, 60
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+
+        BorderedButton:
+            text: 'Voltar'
+            size_hint_y: None
+            background_color: 1, 0, 0, 1
+            on_touch_down: if is_left_click(self, args[1]): root.go_back()
+
+
+<ClientInfo>:
+    BorderedButton:
+        text: "Apagar cliente"
+        size_hint: None, None
+        height: 60
+        width: 240
+        background_color: 1,0,0,1
+        top: self.parent.height - 10
+        x: 10
+        on_touch_down: if is_left_click(self, args[1]): root.delete()
+
+    BorderedButton:
+        text: "Editar cliente"
+        size_hint: None, None
+        height: 60
+        width: 240
+        background_color: 0,0,1,1
+        top: self.parent.height - 10
+        right: self.parent.width - 10
+        on_touch_down: if is_left_click(self, args[1]): root.edit()
+
+    BoxLayout:
+        orientation: "vertical"
+
+        BorderedLabel:
+            text: 'Informações do Cliente - Consulta de Encomendas'
+            font_size: 30
+            size_hint_y: None
+            height: 80
+
+        BoxLayout:
+            padding: 10,10,10,10
+            size_hint_y: None
+            height: 80
+
+            BorderedLabel:
+                text: 'Nome do cliente:'
+                height: 60
+                size_hint_x: .3
+
+            BorderedLabel:
+                id: name
+                height: 60
+
+
+        BoxLayout:
+            padding: 10,0,10,10
+            size_hint_y: None
+            height: 70
+
+            BorderedLabel:
+                text: 'Telefone do cliente:'
+                height: 60
+                size_hint_x: .3
+
+            BorderedLabel:
+                id: phone
+                height: 60
+
+
+        BoxLayout:
+            padding: 10,0,10,10
+            size_hint_y: None
+            height: 70
+
+            BorderedLabel:
+                text: 'Valor total das encomendas:'
+                height: 60
+                size_hint_x: .3
+
+            BorderedLabel:
+                id: total
+                height: 60
+
+        BoxLayout:
+            padding: 10,0,10,10
+            size_hint_y: None
+            height: 70
+
+            BorderedLabel:
+                text: 'Valor total pago:'
+                height: 60
+                size_hint_x: .3
+
+            BorderedLabel:
+                id: paid
+                height: 60
+
+        Label:
+            text: "Encomendas do Cliente:"
+            color: 0,0,0,1
+            height: 60
+            size_hint_y: None
+            font_size: 30
+
+        BoxLayout:
+            orientation:'vertical'
+            BoxLayout:
+                size_hint_y: None
+                BorderedLabel:
+                    text: 'Número da\nEncomenda'
+                    halign: 'center'
+                BorderedLabel:
+                    text: 'Local de Entrega'
+                BorderedLabel:
+                    text: 'Foi Entregue?'
+                BorderedLabel:
+                    text: 'Valor Total\nda Encomenda'
+                    halign: 'center'
+                BorderedLabel
+
+            RecycleView:
+                id: orders
+                viewclass: 'OrderView'
+                RecycleBoxLayout:
+                    default_size: None, 60
+                    default_size_hint: 1, None
+                    size_hint_y: None
+                    height: self.minimum_height
+                    orientation: 'vertical'
+
+        BorderedButton:
+            text: "Voltar"
+            size_hint_y: None
+            background_color: 1,0,0,1
+            on_touch_down:
+                if is_left_click(self, args[1]): root.manager.current = 'select'
+
+
+<NewPayment>:
+    title: 'Registrar Pagamento'
+    title_size: 25
+    title_align: 'center'
+
+
+    size_hint: None, None
+
+    size: 800, 210
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        BoxLayout:
+            height: 40
+            size_hint_y: None
+
+            BorderedLabel:
+                text: 'Quantia:'
+                color: 1,1,1,1
+                size_hint_y: None
+                height: 40
+
+            BorderedTextInput:
+                id: amount
+                height: 40
+                size_hint_y: None
+                multiline: False
+                on_text: self.text = format_brl(parse_brl(self.text))
+
+        BoxLayout:
+            height: 40
+            size_hint_y: None
+
+            BorderedLabel:
+                text: 'Data:'
+                color: 1,1,1,1
+                size_hint_y: None
+                height: 40
+
+            BorderedTextInput:
+                id: date
+                height: 40
+                size_hint_y: None
+                multiline: False
+
+
+        BorderedButton:
+            text: 'Registrar'
+            background_color: 0,1,0,1
+            size_hint_y: None
+            height: 50
+            on_touch_down: if is_left_click(self, args[1]): root.register()
+
+
+
+<PaymentsClientToSelect@BorderedButton>:
+    name: ''
+    client_id: 0
+
+    text: self.name
+    on_touch_down: if is_left_click(self, args[1]): app.payments.sm.current_screen.choose(self.client_id)
+
+
+
+<PaymentsSelectClient>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        BorderedLabel:
+            text: 'Selecionar Cliente - Consulta de Pagamentos'
+            font_size: 30
+            size_hint_y: None
+            height: 80
+
+        BorderedTextInput:
+            id: search
+            hint_text: "Pesquisar cliente"
+            size_hint_y:  None
+            height: 40
+            on_text: root.filter(self.text)
+
+        RecycleView:
+            id:clients
+            viewclass: 'PaymentsClientToSelect'
+            RecycleBoxLayout:
+                default_size: None, 60
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+
+        BorderedButton:
+            text: 'Voltar'
+            size_hint_y: None
+            background_color: 1, 0, 0, 1
+            on_touch_down: if is_left_click(self, args[1]): root.go_back()
+
+
+<PaymentView@BoxLayout>:
+    payment_id: 0
+    amount: Decimal()
+    date: ''
+    height: 50
+    size_hint_y: None
+
+    BorderedLabel
+        text: str(self.parent.payment_id)
+        height: self.parent.height
+    BorderedLabel:
+        text: self.parent.date
+        height: self.parent.height
+    BorderedLabel:
+        text: str(self.parent.amount)
+        height: self.parent.height
+    BorderedButton:
+        text: 'Apagar'
+        height: self.parent.height
+        size_hint_x: None
+        width: 100
+        background_color: 1,0,0,1
+        on_touch_down:
+            if is_left_click(self, args[1]): \
+            app.payments.sm.current_screen.delete_payment(self.parent.payment_id)
+
+<PaymentsInfo>:
+    BoxLayout:
+        orientation: "vertical"
+
+        BorderedLabel:
+            text: 'Pagamentos'
+            font_size: 30
+            size_hint_y: None
+            height: 80
+
+        BoxLayout:
+            padding: 10,10,10,10
+            size_hint_y: None
+            height: 80
+
+            BorderedLabel:
+                text: 'Nome do cliente:'
+                height: 60
+                size_hint_x: .3
+
+            BorderedLabel:
+                id: name
+                height: 60
+
+
+        BoxLayout:
+            padding: 10,0,10,10
+            size_hint_y: None
+            height: 70
+
+            BorderedLabel:
+                text: 'Telefone do cliente:'
+                height: 60
+                size_hint_x: .3
+
+            BorderedLabel:
+                id: phone
+                height: 60
+
+
+        BoxLayout:
+            padding: 10,0,10,10
+            size_hint_y: None
+            height: 70
+
+            BorderedLabel:
+                text: 'Valor total das encomendas:'
+                height: 60
+                size_hint_x: .3
+
+            BorderedLabel:
+                id: total
+                height: 60
+
+
+        BoxLayout:
+            size_hint_y: None
+            height: 70
+            BoxLayout:
+                padding: 10,0,10,10
+                size_hint_y: None
+                height: 70
+
+                BorderedLabel:
+                    text: 'Valor total pago:'
+                    height: 60
+                    size_hint_x: .3
+
+                BorderedLabel:
+                    id: paid
+                    height: 60
+
+
+            BoxLayout:
+                padding: 10,0,10,10
+                size_hint_y: None
+                height: 70
+
+                BorderedLabel:
+                    text: 'Valor restante:'
+                    height: 60
+                    size_hint_x: .3
+
+                BorderedLabel:
+                    id: remaining
+                    height: 60
+
+
+
+        Label:
+            text: "Pagamentos do Cliente:"
+            color: 0,0,0,1
+            height: 60
+            size_hint_y: None
+            font_size: 30
+
+        BoxLayout:
+            orientation:'vertical'
+            BoxLayout:
+                size_hint_y: None
+                BorderedLabel:
+                    text: 'Numero do Pagamento'
+                BorderedLabel:
+                    text: 'Data do Pagamento'
+                BorderedLabel:
+                    text: "Quantia Paga"
+                BorderedLabel:
+                    size_hint_x: None
+                    width: 100
+
+            RecycleView:
+                id: payments
+                viewclass: 'PaymentView'
+                RecycleBoxLayout:
+                    default_size: None, 60
+                    default_size_hint: 1, None
+                    size_hint_y: None
+                    height: self.minimum_height
+                    orientation: 'vertical'
+
+        BoxLayout:
+            size_hint_y: None
+
+            BorderedButton:
+                text: "Voltar"
+                size_hint_y: None
+                background_color: 1,0,0,1
+                on_touch_down:
+                    if is_left_click(self, args[1]): root.manager.current = 'select'
+
+            BorderedButton:
+                text: "Registrar pagamento"
+                background_color: 0,0,1,1
+                on_touch_down:
+                    if is_left_click(self, args[1]): root.new_payment()
+
+
+<OrderView@BoxLayout>:
+    order_id: 0
+    local: ''
+    delivered: False
+    total: Decimal()
+
+    BorderedLabel:
+        text: str(self.parent.order_id)
+        height: self.parent.height
+
+    BorderedLabel:
+        text: self.parent.local
+        height: self.parent.height
+
+    BorderedLabel:
+        text: "Sim" if self.parent.delivered else "Não"
+        height: self.parent.height
+
+    BorderedLabel:
+        text: format_brl(self.parent.total)
+        height: self.parent.height
+
+    BorderedButton:
+        text: "Ver detalhes"
+        background_color: 0,0,1,1
+        height: self.parent.height
+        on_touch_down:
+            if is_left_click(self, args[1]): \
+            app.consult.sm.current_screen.show_order_details(self.parent.order_id)
+
+
+<OrderDetails>:
+    BoxLayout:
+        orientation: 'vertical'
+        BorderedLabel:
+            id: title
+            font_size: 30
+            height: 80
+            size_hint_y: None
+
+        BoxLayout:
+            padding: 10,10,10,10
+            size_hint_y: None
+            height: 80
+
+            BorderedLabel:
+                text: "A encomenda foi entregue?"
+                height: 60
+                size_hint_x: .3
+
+            BorderedLabel:
+                id: delivered
+                height: 60
+
+
+        BoxLayout:
+            padding: 10,0,10,10
+            size_hint_y: None
+            height: 70
+
+            BorderedLabel:
+                text: "Local para entrega:"
+                height: 60
+                size_hint_x: .3
+
+            BorderedLabel:
+                id: local
+                height: 60
+
+
+        BoxLayout:
+            padding: 10,0,10,10
+            size_hint_y: None
+            height: 250
+            orientation: 'vertical'
+
+            BorderedLabel:
+                text: "Informações extras sobre a encomenda:"
+                height: 40
+
+            BorderedLabel:
+                id: info
+                height: 200
+
+
+        BorderedLabel:
+            text: "Itens da encomenda"
+            height: 60
+
+        BoxLayout:
+            height: 60
+            size_hint_y: None
+            BorderedLabel:
+                height: self.parent.height
+                text: "Quantidade"
+            BorderedLabel:
+                height: self.parent.height
+                text: "Nome"
+            BorderedLabel:
+                height: self.parent.height
+                text: "Unidade"
+            BorderedLabel:
+                height: self.parent.height
+                text: "Total"
+        RecycleView:
+            id: itens
+            viewclass: 'ItenView'
+            RecycleBoxLayout:
+                default_size: None, 60
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+
+        BoxLayout:
+            size_hint_y: None
+            height: 60
+            BorderedLabel:
+                text: 'Valor total da encomenda:'
+                height: 60
+                size_hint_x: .75
+
+            BorderedLabel:
+                id: total
+                height: 60
+                size_hint_x: .25
+
+        BorderedButton:
+            text: "Voltar"
+            size_hint_y: None
+            background_color: 1,0,0,1
+            on_touch_down: if is_left_click(self, args[1]): root.manager.current = 'info'
+
+
+<ItenView@BoxLayout>:
+    name: ""
+    quantity: Decimal()
+    price: Decimal()
+
+    BorderedLabel:
+        height: self.parent.height
+        text: str(self.parent.quantity)
+    BorderedLabel:
+        height: self.parent.height
+        text: self.parent.name
+    BorderedLabel:
+        height: self.parent.height
+        text: format_brl(self.parent.price)
+    BorderedLabel:
+        height: self.parent.height
+        text: format_brl(self.parent.price*self.parent.quantity)
+
+
+<OrderList>:
+    BoxLayout:
+        orientation: 'vertical'
+        BorderedLabel:
+            text: 'Lista de Encomendas'
+            font_size: 30
+            height: 80
+            size_hint_y: None
+
+        BorderedTextInput:
+            id: search
+            hint_text: "Pesquisar cliente"
+            height: 40
+            size_hint_y: None
+            on_text: root.filter()
+
+        BoxLayout:
+            size_hint_y: None
+            height: 80
+            padding: 10,10,10,10
+
+            BorderedLabel:
+                text: "Mostrar encomendas entregues?"
+                height: 60
+
+            BorderedToggleButton:
+                id: show_delivered
+                text: "Sim"
+                group: 'delivered'
+                height: 60
+                width: 150
+                size_hint_x: None
+                on_state: root.filter()
+                allow_no_selection: False
+            BorderedToggleButton:
+                id: dont_show_delivered
+                text: "Não"
+                group: 'delivered'
+                height: 60
+                width: 150
+                size_hint_x: None
+                state: 'down'
+                allow_no_selection: False
+
+        BoxLayout:
+            height: 60
+            size_hint_y: None
+            BorderedLabel:
+                text: "Número da\nEncomenda"
+                height: self.parent.height
+                halign: 'center'
+            BorderedLabel:
+                text: "Nome do\nCliente"
+                height: self.parent.height
+                halign: 'center'
+            BorderedLabel:
+                text: "Local de\nEntrega"
+                height: self.parent.height
+                halign: 'center'
+            BorderedLabel:
+                text: "Foi Entregue?"
+                height: self.parent.height
+            BorderedLabel:
+                height: self.parent.height
+
+
+        RecycleView:
+            id: orders
+            viewclass: 'OrderListRow'
+            RecycleBoxLayout:
+                default_size: None, 60
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+
+        BorderedButton:
+            text: "Voltar"
+            size_hint_y: None
+            background_color: 1,0,0,1
+            on_touch_down: if is_left_click(self, args[1]): app.sm.current = 'menu'
+
+
+<OrderListRow@BoxLayout>:
+    order_id: 0
+    client_name: ''
+    local: ''
+    delivered: False
+    BorderedLabel:
+        text: str(self.parent.order_id)
+        height: self.parent.height
+    BorderedLabel:
+        text: self.parent.client_name
+        height: self.parent.height
+    BorderedLabel:
+        text: self.parent.local
+        height: self.parent.height
+    BorderedLabel:
+        text: "Sim" if self.parent.delivered else "Não"
+        height: self.parent.height
+    BorderedButton:
+        text: "Editar"
+        height: self.parent.height
+        background_color: 0,0,1,1
+        on_touch_down:
+            if is_left_click(self,args[1]): \
+            app.orders.sm.current_screen.edit_order_info(self.parent.order_id)
+
+
+<EditOrder>:
+    BorderedButton:
+        text: "Apagar encomenda"
+        size_hint: None, None
+        height: 60
+        width: 240
+        background_color: 1,0,0,1
+        top: self.parent.height - 10
+        right: self.parent.width - 10
+        on_touch_down: if is_left_click(self, args[1]): root.delete()
+
+
+    BoxLayout:
+        orientation: "vertical"
+
+        BorderedLabel:
+            id: title
+            font_size: 30
+            size_hint_y: None
+            height: 80
+
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: 30,30,30,30
+            height: 180
+            size_hint_y: None
+
+            BorderedLabel:
+                text: "Local da entrega:"
+                height: 60
+
+            BorderedTextInput:
+                id: local
+                height: 60
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: 30,0,30,30
+            BorderedLabel:
+                text: "Informações extras sobre a encomenda:"
+                height: 60
+                size_hint_y: None
+            BorderedTextInput:
+                id: info
+
+        BoxLayout:
+            padding: 30,0,30,30
+            size_hint_y: None
+            height: 120
+            BorderedLabel:
+                text: "O pedido ja foi entregue?"
+                height: 60
+            BorderedToggleButton:
+                id: delivered
+                text: "Sim"
+                height: 60
+                width: 150
+                size_hint_x: None
+                group: 'disabled'
+                allow_no_selection: False
+            BorderedToggleButton:
+                id: not_delivered
+                text: "Não"
+                height: 60
+                width: 150
+                size_hint_x: None
+                group: 'disabled'
+                allow_no_selection: False
+
+        BoxLayout:
+            size_hint_y: None
+
+            BorderedButton:
+                text: "Cancelar"
+                background_color: 1,0,0,1
+                on_touch_down: if is_left_click(self, args[1]): root.manager.current = 'list'
+
+            BorderedButton:
+                text: "Salvar alterações"
+                background_color: 0,0,1,1
+                on_touch_down: if is_left_click(self, args[1]): root.save()
+
+
+<Prices>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        BorderedLabel:
+            text: "Itens e Preços"
+            size_hint_y: None
+            height: 80
+            font_size: 30
+
+        BoxLayout:
+            size_hint_y: None
+            height: 80
+
+            BorderedLabel:
+                text: "Item"
+                height: self.parent.height
+
+            BorderedLabel:
+                text: "Preço"
+                height: self.parent.height
+
+            BorderedLabel:
+                height: self.parent.height
+                size_hint_x: None
+                width: 300
+
+        RecycleView:
+            id: itens
+            viewclass: 'PriceRow'
+            RecycleBoxLayout:
+                default_size: None, 60
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+
+        BoxLayout:
+            size_hint_y: None
+
+            BorderedButton:
+                text: "Voltar"
+                size_hint_y: None
+                background_color: 1,0,0,1
+                on_touch_down: if is_left_click(self, args[1]): root.manager.current = 'menu'
+
+            BorderedButton:
+                text: "Adicionar novo item"
+                size_hint_y: None
+                background_color: 0,1,0,1
+                on_touch_down: if is_left_click(self, args[1]): root.new_iten()
+
+<PriceRow@BoxLayout>:
+    name: ''
+    price: ''
+
+    BorderedLabel:
+        text: self.parent.name
+        height: self.parent.height
+
+    BorderedLabel:
+        text: self.parent.price
+        height: self.parent.height
+
+    BorderedButton:
+        text: 'Editar Preço'
+        height: self.parent.height
+        width: 150
+        size_hint_x: None
+        background_color: 0,0,1,1
+        on_touch_down:
+            if is_left_click(self, args[1]): app.prices.edit(self.parent.name)
+
+    BorderedButton:
+        text: 'Apagar'
+        height: self.parent.height
+        width: 150
+        size_hint_x: None
+        background_color: 1,0,0,1
+        on_touch_down:
+            if is_left_click(self, args[1]): app.prices.delete(self.parent.name)
+
+
+
+<EditPrice>:
+    title: 'Editar Preço'
+    title_size: 25
+    title_align: 'center'
+
+
+    size_hint: None, None
+
+    size: 800, 210
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        GridLayout:
+            cols: 2
+
+            height: 80
+
+            BorderedLabel:
+                text: 'Nome:'
+                color: 1,1,1,1
+                size_hint_y: None
+                height: 40
+
+            BorderedLabel:
+                text: root.iten.name
+                height: 40
+                size_hint_y: None
+                multiline: False
+                color: 1,1,1,1
+                on_text: self.text = self.text.upper()
+
+            BorderedLabel:
+                text: 'Preço:'
+                color: 1,1,1,1
+                size_hint_y: None
+                height: 40
+
+            BorderedTextInput:
+                id: price
+                text: format_brl(root.iten.price)
+                height: 40
+                size_hint_y: None
+                multiline: False
+                on_text: self.text = format_brl(parse_brl(self.text))
+
+        BoxLayout:
+            height: 50
+            size_hint_y: None
+            BorderedButton:
+                text: "Cancelar"
+                background_color: 1,0,0,1
+                size_hint_y: None
+                height: 50
+                on_touch_down: if is_left_click(self, args[1]): root.dismiss()
+
+            BorderedButton:
+                text: 'Salvar'
+                background_color: 0,1,0,1
+                size_hint_y: None
+                height: 50
+                on_touch_down: if is_left_click(self, args[1]): root.save()
+
+
+
+<BorderedLabel>:
+    size_hint_y: None
+    font_size: 20
+    color: 0,0,0,1
+
+
+<BorderedTextInput@TextInput+Border>:
+    font_size: 20
+
+
+<BorderedToggleButton@ToggleButton+Border>:
+    font_size: 20
+    size_hint_y: None
+    height: self.parent.height
+
+
+<BorderedButton>:
+    font_size: 20
+
+
+<Border>:
+    border_color: 0,0,0,1
+    border_width: 2
+    canvas.after:
+        Color:
+            rgba: self.border_color
+
+        # Bottom
+        Line:
+            width: self.border_width
+            points: self.x, self.y, self.x + self.width, self.y
+        # Top
+        Line:
+            width: self.border_width
+            points: (self.x, self.y + self.height, self.x + self.width, self.y + self.height)
+        # Left
+        Line:
+            width: self.border_width
+            points: (self.x, self.y, self.x, self.y + self.height)
+        # Right
+        Line:
+            width: self.border_width
+            points: (self.x + self.width, self.y, self.x + self.width, self.y + self.height)

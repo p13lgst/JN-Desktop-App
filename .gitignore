@@ -1,0 +1,9 @@
+
+env/
+__pycache__/
+
+backup_*
+
+.kivy/logs/
+
+.db
